@@ -90,6 +90,8 @@ Tell Claude what you want, in plain English. Examples:
 
 - *"Tighten the header on the [your page] page."*
 - *"Make the active sidebar pill teal."*
+- *"Match this to my Claude Design: [paste URL]."* — Claude reads your
+  design and applies it.
 - *"Open a preview."* — see preview flow below.
 - *"Save this."* — commits your progress so far (a checkpoint, no PR yet).
 - *"Undo that."* — reverts the last change.
