@@ -124,7 +124,12 @@ By design, not a bug. Ping {{REVIEWER}} if you need one of these:
 - Push directly to `{{MAIN_BRANCH}}`
 - Rewrite history or delete files
 - Edit plumbing files (anything starting with `.`)
-- Touch protected data files (see `SKILL.md` for the list)
+- Touch the data layer or business-logic files
+- Touch test specs
+- Edit engineering docs (`README.md`, `CONTRIBUTING.md`, `package.json`)
+
+The full hard-blocked list lives in `.claude/settings.json` — see the
+template's `settings.template.json`.
 
 ---
 

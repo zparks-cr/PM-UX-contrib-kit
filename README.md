@@ -1,17 +1,19 @@
-# Team setup kit
+# PM/UX contrib kit
 
 Reusable templates for setting up a Claude-Desktop-driven contribution
-workflow on any CourtReserve team repo. Copy `CONTRIBUTING.template.md`
-and `SKILL.template.md` into your repo, find-replace the placeholders,
-done.
+workflow on any team repo. Copy the three templates into your repo,
+find-replace the placeholders, done.
 
-This kit is generic. The filled-in versions for the Competitions team
-(tournaments-front prototype) live at:
+**Files in this kit:**
 
-- `../CONTRIBUTING.md`
-- `../.claude/skills/ux-edits/SKILL.md`
+- `CONTRIBUTING.template.md` → goes to your repo root as `CONTRIBUTING.md`
+- `SKILL.template.md` → goes to `.claude/skills/ux-edits/SKILL.md`
+- `settings.template.json` → goes to `.claude/settings.json` (the
+  hard-block enforcement layer)
 
-Treat those as the worked example.
+The CourtReserve Competitions team is using a filled-in version of this
+kit on the `tournaments-front` repo. Ping Zak if you want to see the
+worked example.
 
 ## What this workflow is
 
@@ -115,16 +117,14 @@ sensitive in your codebase.
 
 1. Copy `CONTRIBUTING.template.md` → `CONTRIBUTING.md` at your repo root.
 2. Copy `SKILL.template.md` → `.claude/skills/ux-edits/SKILL.md`.
-3. Find-replace the placeholders in both files (VS Code's "Find in
+3. Copy `settings.template.json` → `.claude/settings.json`.
+4. Find-replace the placeholders in all three files (VS Code's "Find in
    Files" or `sed` works).
-4. Set up branch protection on `{{MAIN_BRANCH}}`:
+5. Set up branch protection on `{{MAIN_BRANCH}}`:
    - Add `* @your-github-handle` to `.github/CODEOWNERS`.
    - Enable "Require a pull request before merging" + "Require review
      from Code Owners" in repo settings (or via `gh api`).
-5. Create the `{{BRANCH}}` branch and push it to origin.
-6. Add a `.claude/settings.json` to allow safe git commands and deny
-   dangerous ones. (The Competitions example at
-   `../.claude/settings.json` is a good starting point.)
+6. Create the `{{BRANCH}}` branch and push it to origin.
 
 Then point your design / PM contributors at `CONTRIBUTING.md`. It walks
 them through their own one-time setup (~15 min, Terminal-based, no
