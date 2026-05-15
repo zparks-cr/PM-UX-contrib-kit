@@ -95,6 +95,7 @@ Tell Claude what you want, in plain English. Examples:
 - *"Open a preview."* — see preview flow below.
 - *"Save this."* — commits your progress so far (a checkpoint, no PR yet).
 - *"Undo that."* — reverts the last change.
+- *"I'm done. Send to {{REVIEWER}}."* — pushes everything and opens a PR for review.
 
 ### Previewing changes
 
