@@ -31,7 +31,8 @@ If it says `command not found`, install:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Enter your Mac password when asked. Takes 3–5 minutes.
+Enter your Mac password when asked. You won't see characters as you
+type; that's normal. Takes 3–5 minutes.
 
 ### 3. Install GitHub CLI
 
@@ -49,9 +50,9 @@ Still in Terminal:
 gh auth login
 ```
 
-Answer the prompts: `GitHub.com` → `HTTPS` → `Y` → `Login with a web
-browser`. Copy the code Terminal shows, paste it into the browser tab
-that opens, click Authorize.
+Answer the prompts (use arrow keys to highlight, Enter to select):
+`GitHub.com` → `HTTPS` → `Y` → `Login with a web browser`. Copy the code
+Terminal shows, paste it into the browser tab that opens, click Authorize.
 
 > Ping {{REVIEWER}} if you haven't been added to the {{GH_ORG}} org.
 
@@ -70,6 +71,9 @@ directory. You can close Terminal now; you won't need it again.
 
 Open Claude Desktop → **Code** tab → **Select folder** → navigate to
 **home → {{LOCAL_FOLDER}} → {{REPO_NAME}}** → Open.
+
+> If any of the Terminal steps errors out, screenshot the Terminal
+> window and DM {{REVIEWER}}. Don't try to fix it yourself.
 
 ---
 
@@ -90,12 +94,12 @@ Tell Claude what you want, in plain English. Examples:
 
 - *"Tighten the header on the [your page] page."*
 - *"Make the active sidebar pill teal."*
-- *"Match this to my Claude Design: [paste URL]."* — Claude reads your
-  design and applies it.
+- *"Match my Claude Design."* — see **Coming from Claude Design** below.
 - *"Open a preview."* — see preview flow below.
 - *"Save this."* — commits your progress so far (a checkpoint, no PR yet).
 - *"Undo that."* — reverts the last change.
-- *"I'm done. Send to {{REVIEWER}}."* — pushes everything and opens a PR for review.
+- *"I'm done."* / *"Send to {{REVIEWER}}."* — pushes everything and opens
+  a Pull Request (PR) for review.
 
 ### Previewing changes
 
@@ -103,14 +107,19 @@ Tell Claude what you want, in plain English. Examples:
 
 ### Coming from Claude Design
 
-If you sketched the change in [claude.ai/design](https://claude.ai/design),
-click **Share handoff to Claude Code** from there. The design lands in
-your Code session as context, and Claude turns it into real edits in the
-codebase.
+Designs you sketched in [claude.ai/design](https://claude.ai/design) can
+come into your Code session two ways. Both work:
+
+- **Easiest:** click **Share handoff to Claude Code** in claude.ai/design.
+  The design lands in your session as context.
+- **Or:** paste the Claude Design URL into the chat. Claude fetches the
+  design and applies it.
+
+Either way, Claude turns it into real edits in the codebase.
 
 ### Ending your day (or finishing a batch)
 
-- *"I'm finished."* / *"Send to {{REVIEWER}}."* — Claude pushes
+- *"I'm done."* / *"Send to {{REVIEWER}}."* — Claude pushes
   `{{BRANCH}}` and opens a PR.
 - *"Pause here."* — Claude saves your work to `{{BRANCH}}` without
   opening a PR.
