@@ -11,9 +11,6 @@ find-replace the placeholders, done.
 - `settings.template.json` → goes to `.claude/settings.json` (the
   hard-block enforcement layer)
 
-The CourtReserve Competitions team is using a filled-in version of this
-kit on the `tournaments-front` repo. Ping Zak if you want to see the
-worked example.
 
 ## What this workflow is
 
@@ -21,10 +18,6 @@ Non-engineering teammates (typically design and product) work in Claude
 Desktop's **Code** tab. Claude applies their changes directly to the
 repo, commits to a working branch, and opens a PR to `main`. The team's
 **tech lead** reviews and merges to `main`, then deploys.
-
-> On the Competitions team, Zak (the lead) merges because he's acting as
-> both PM and eng lead. On most teams the tech lead is the merger, and
-> the PM + UX are the contributors going through this workflow.
 
 The skill encodes:
 
@@ -51,23 +44,23 @@ Both templates use these placeholders. Find-replace once per file:
 
 | Placeholder | Meaning | Example |
 |---|---|---|
-| `{{REPO_NAME}}` | Just the repo name | `tournaments-front` |
-| `{{GH_REPO}}` | `org/repo` | `TennisRungs/tournaments-front` |
-| `{{GH_ORG}}` | GitHub org | `TennisRungs` |
-| `{{PROJECT_DESC}}` | One-liner describing the codebase | `CourtReserve tournaments prototype` |
-| `{{LIVE_URL}}` | Production URL (if any) | `https://crtournaments.netlify.app` |
-| `{{REVIEWER}}` | First-name of the tech lead who merges to main | `Zak` |
+| `{{REPO_NAME}}` | Just the repo name | `my-app` |
+| `{{GH_REPO}}` | `org/repo` | `acme/my-app` |
+| `{{GH_ORG}}` | GitHub org | `acme` |
+| `{{PROJECT_DESC}}` | One-liner describing the codebase | `Acme's customer-facing web app` |
+| `{{LIVE_URL}}` | Production URL (if any) | `https://my-app.com` |
+| `{{REVIEWER}}` | First-name of the tech lead who merges to main | `Alex` |
 | `{{BRANCH}}` | Contributors' working branch | `ux` |
 | `{{MAIN_BRANCH}}` | Branch they merge into | `main` |
-| `{{LOCAL_FOLDER}}` | Where to clone on disk (under `~/`) | `competitions` |
-| `{{PREVIEW_FLOW}}` | How the UX teammate previews changes (multi-line, see below) | see "Preview flow" section |
+| `{{LOCAL_FOLDER}}` | Where to clone on disk (under `~/`) | `code` |
+| `{{PREVIEW_FLOW}}` | How the contributor previews changes (multi-line, see below) | see "Preview flow" section |
 
 ## Preview flow
 
 This is the most team-specific piece. Pick whichever applies and paste it
 in everywhere the template says `{{PREVIEW_FLOW}}`:
 
-**Static HTML, no build (Competitions / tournaments-front uses this):**
+**Static HTML, no build:**
 
 ```
 The prototype is static HTML. Open the file directly in the browser:
@@ -86,7 +79,7 @@ picks up edits automatically.
 
 ```
 Push to `{{BRANCH}}` and the QA environment auto-deploys. Visit
-https://qa.courtreserve.com to preview.
+https://qa.yourteam.example to preview.
 ```
 
 **Storybook:**
@@ -109,9 +102,8 @@ README, paste a short summary there or link out.
 
 The template lists "allowed to edit freely" and "do not edit" buckets
 with `{{...}}` placeholders. Fill these in based on your repo's
-structure. The Competitions example has them filled in for the
-prototype's `mock-data/` files, `_redirects`, etc. Adapt to whatever's
-sensitive in your codebase.
+structure (typical protected paths: data fixtures, routing config,
+test specs, CI config, etc.).
 
 ## Install steps (tech lead does these once)
 
