@@ -117,6 +117,29 @@ come into your Code session two ways. Both work:
 
 Either way, Claude turns it into real edits in the codebase.
 
+#### First-time: connecting Claude Design to this repo
+
+You have two ways to give Claude Design access to the project:
+
+- **Option A: web capture from the live URL.** In Claude Design, paste
+  the URL of the page you want to redesign (your live or staging URL).
+  Claude Design grabs the rendered page directly. This is the most
+  reliable path for codebases that compile/transform at runtime (e.g.,
+  Babel-in-browser, JIT compilers, edge-rendered routes).
+
+- **Option B: GitHub import.** In Claude Design, click
+  **Import → From GitHub** and select your repo.
+  **Critical:** when you connect the repo, tell Claude Design to
+  **import the whole repo and keep the folder structure intact**. If it
+  flattens the folders (treats subdirectories as separate top-level
+  imports), relative paths in HTML/CSS/JS will break and pages render
+  unstyled. A safe phrase: *"Import the whole repo with the full folder
+  structure preserved."*
+
+If you see "file not found," unstyled pages, or broken renders after
+import, the folders got flattened. Re-import with the phrase above, or
+switch to web capture (Option A).
+
 ### Ending your day (or finishing a batch)
 
 - *"I'm done."* / *"Send to {{REVIEWER}}."* — Claude pushes

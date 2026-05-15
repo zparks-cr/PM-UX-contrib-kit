@@ -145,6 +145,22 @@ design system). Ask one clarifying question: *"What's the takeaway from
 this? Layout structure, specific colors, a font treatment? I'll extract
 that piece and apply our tokens."* Don't try to import outside tokens.
 
+**If the user reports Claude Design rendering issues** (e.g., *"the
+page looks unstyled"*, *"file not found"*, *"nothing's loading"*, or
+shows a screenshot with broken styles after a Claude Design GitHub
+import):
+
+- **Likely cause:** Claude Design flattened the folder hierarchy on
+  GitHub import. HTML/CSS/JS that uses relative paths to find sibling
+  folders (e.g., `../../design-system/...`) now points nowhere.
+- **Fix:** suggest the user re-import with folder structure preserved.
+  The exact phrase that works: *"Import the whole repo with the full
+  folder structure preserved."*
+- **Alternative:** if the codebase compiles/transforms at runtime
+  (Babel-in-browser, edge-rendered routes), GitHub import may not
+  render correctly even with intact folders. Suggest **web capture**
+  on the live URL instead — Claude Design grabs the rendered output.
+
 ### During a session
 
 - *"Save this"* / *"Save what we have"* → commit + push to `{{BRANCH}}`.
