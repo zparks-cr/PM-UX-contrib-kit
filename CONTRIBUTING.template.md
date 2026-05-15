@@ -88,57 +88,63 @@ Claude pulls the latest from `{{MAIN_BRANCH}}` into the `{{BRANCH}}`
 branch so you're working off current code. Then it'll ask what you want
 to do.
 
-### Working
+### Two ways to iterate
 
-Tell Claude what you want, in plain English. Examples:
+You have two paths. Pick whichever fits the task.
+
+#### Path A: Direct in Claude Code (default)
+
+Talk to Claude Code in plain English. You see changes via your team's
+preview flow (see below).
+
+1. *"Open a preview."* — Claude opens the page (per your preview flow).
+2. Tell Claude what you want.
+3. Reload to see the change.
+
+**Best for:** copy tweaks, color swaps, spacing, single-element changes,
+cross-surface changes — anything you can describe in a sentence. This is
+what you'll use most of the time.
+
+Example phrases:
 
 - *"Tighten the header on the [your page] page."*
 - *"Make the active sidebar pill teal."*
-- *"Match my Claude Design."* — see **Coming from Claude Design** below.
-- *"Open a preview."* — see preview flow below.
-- *"Save this."* — commits your progress so far (a checkpoint, no PR yet).
+- *"Save this."* — commits your progress (a checkpoint, no PR yet).
 - *"Undo that."* — reverts the last change.
 - *"I'm done."* / *"Send to {{REVIEWER}}."* — pushes everything and opens
   a Pull Request (PR) for review.
 
-### Previewing changes
+### Previewing changes (Path A)
 
 {{PREVIEW_FLOW}}
 
-### Coming from Claude Design
+#### Path B: Visual iteration in Claude Design, then handoff
 
-Designs you sketched in [claude.ai/design](https://claude.ai/design) can
-come into your Code session two ways. Both work:
+Use Claude Design's visual tools (drag knobs, alternates, comments) to
+iterate, then hand off to Claude Code to apply.
 
-- **Easiest:** click **Share handoff to Claude Code** in claude.ai/design.
-  The design lands in your session as context.
-- **Or:** paste the Claude Design URL into the chat. Claude fetches the
-  design and applies it.
+**One-time setup.** In Claude Design, click **Import → From GitHub** and
+select `{{GH_REPO}}`. When asked, say *"Import the whole repo with the
+full folder structure preserved."* This avoids the import flattening
+folders, which would break source awareness and rendering.
 
-Either way, Claude turns it into real edits in the codebase.
+**Each session:**
 
-#### First-time: connecting Claude Design to this repo
+1. Open Claude Design. Say *"Pull the latest from GitHub"* so you're
+   working off current `{{MAIN_BRANCH}}`.
+2. Iterate visually with Claude Design's tools.
+3. Click **Share handoff to Claude Code** when you're happy.
+4. Open Claude Code's **Code** tab. Paste the handoff (or tell Claude
+   *"fetch this Claude Design URL: ..."*).
+5. Claude Code applies the changes, commits to `{{BRANCH}}`, and opens a PR.
 
-You have two ways to give Claude Design access to the project:
-
-- **Option A: web capture from the live URL.** In Claude Design, paste
-  the URL of the page you want to redesign (your live or staging URL).
-  Claude Design grabs the rendered page directly. This is the most
-  reliable path for codebases that compile/transform at runtime (e.g.,
-  Babel-in-browser, JIT compilers, edge-rendered routes).
-
-- **Option B: GitHub import.** In Claude Design, click
-  **Import → From GitHub** and select your repo.
-  **Critical:** when you connect the repo, tell Claude Design to
-  **import the whole repo and keep the folder structure intact**. If it
-  flattens the folders (treats subdirectories as separate top-level
-  imports), relative paths in HTML/CSS/JS will break and pages render
-  unstyled. A safe phrase: *"Import the whole repo with the full folder
-  structure preserved."*
+**Best for:** redesigning an existing page, designing a new component
+from scratch, comparing multiple visual directions side-by-side,
+anything that benefits from drag-knob iteration.
 
 If you see "file not found," unstyled pages, or broken renders after
-import, the folders got flattened. Re-import with the phrase above, or
-switch to web capture (Option A).
+Claude Design's import, the folders got flattened. Re-import with the
+preserved-structure phrase above.
 
 ### Ending your day (or finishing a batch)
 

@@ -156,10 +156,8 @@ import):
 - **Fix:** suggest the user re-import with folder structure preserved.
   The exact phrase that works: *"Import the whole repo with the full
   folder structure preserved."*
-- **Alternative:** if the codebase compiles/transforms at runtime
-  (Babel-in-browser, edge-rendered routes), GitHub import may not
-  render correctly even with intact folders. Suggest **web capture**
-  on the live URL instead — Claude Design grabs the rendered output.
+- **If she's also asking how to refresh** Claude Design between sessions:
+  *"Pull the latest from GitHub"* gets her current `{{MAIN_BRANCH}}`.
 
 ### During a session
 
