@@ -153,8 +153,10 @@ preserved-structure phrase above.
 - *"Pause here."* — Claude saves your work to `{{BRANCH}}` without
   opening a PR.
 
-{{REVIEWER}} reviews the PR and deploys to the live URL
-(<{{LIVE_URL}}>) on their own schedule.
+{{REVIEWER}} reviews the PR and merges it onto your team's path to
+production (could be direct to `{{MAIN_BRANCH}}`, or through a QA /
+staging stage first — depends on the team). Your changes show up at the
+live URL (<{{LIVE_URL}}>) once it's gone through.
 
 ---
 

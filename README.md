@@ -16,8 +16,11 @@ find-replace the placeholders, done.
 
 Non-engineering teammates (typically design and product) work in Claude
 Desktop's **Code** tab. Claude applies their changes directly to the
-repo, commits to a working branch, and opens a PR to `main`. The team's
-**tech lead** reviews and merges to `main`, then deploys.
+repo, commits to a working branch, and opens a PR. The team's **tech
+lead** reviews the PR and merges it onto whatever branch their pipeline
+expects — that might be `main` directly, or `qa` / `staging` /
+`develop` if the team has multi-stage promotion. The contributor flow
+is the same either way; only the tech lead's target changes.
 
 The skill encodes:
 
@@ -30,13 +33,15 @@ The skill encodes:
 ## What you need
 
 1. **A GitHub repo** your non-engineering contributors have push access to.
-2. **A working branch** they push to (e.g. `ux`, `design`, `staging`).
-3. **A tech lead** with merge rights on `main` (or your default branch).
+2. **A working branch** they push to (e.g. `ux`, `design`).
+3. **A tech lead** with merge rights on whatever branch their PRs target
+   (`main` for single-branch teams; `qa` / `staging` / `develop` for
+   teams that promote through stages first).
 4. **A preview flow** the contributors can use to see changes
    (file-open for static repos, `npm run dev` for build repos, a QA URL,
    Storybook, whatever fits your stack).
-5. **Branch protection** on `main` so only the tech lead can merge. Use
-   `.github/CODEOWNERS` + a required-review rule.
+5. **Branch protection** on the contributors' merge target so only the
+   tech lead can merge. Use `.github/CODEOWNERS` + a required-review rule.
 
 ## Placeholders to swap
 
@@ -49,9 +54,9 @@ Both templates use these placeholders. Find-replace once per file:
 | `{{GH_ORG}}` | GitHub org | `acme` |
 | `{{PROJECT_DESC}}` | One-liner describing the codebase | `Acme's customer-facing web app` |
 | `{{LIVE_URL}}` | Production URL (if any) | `https://my-app.com` |
-| `{{REVIEWER}}` | First-name of the tech lead who merges to main | `Alex` |
+| `{{REVIEWER}}` | First-name of the tech lead who merges contributor PRs | `Alex` |
 | `{{BRANCH}}` | Contributors' working branch | `ux` |
-| `{{MAIN_BRANCH}}` | Branch they merge into | `main` |
+| `{{MAIN_BRANCH}}` | The branch the tech lead merges contributor PRs into. Depends on your team's pipeline — could be `main` for a single-branch flow, or `qa` / `staging` / `develop` for teams with multi-stage promotion. The contributor doesn't need to know what's downstream. | `main` or `qa` |
 | `{{LOCAL_FOLDER}}` | Where to clone on disk (under `~/`) | `code` |
 | `{{PREVIEW_FLOW}}` | How the contributor previews changes (multi-line, see below) | see "Preview flow" section |
 
@@ -112,11 +117,19 @@ test specs, CI config, etc.).
 3. Copy `settings.template.json` → `.claude/settings.json`.
 4. Find-replace the placeholders in all three files (VS Code's "Find in
    Files" or `sed` works).
-5. Set up branch protection on `{{MAIN_BRANCH}}`:
+5. Set up branch protection on `{{MAIN_BRANCH}}` (the branch contributor
+   PRs will target — `main` for single-branch flows, or your `qa` /
+   `staging` / `develop` branch for multi-stage pipelines):
    - Add `* @your-github-handle` to `.github/CODEOWNERS`.
    - Enable "Require a pull request before merging" + "Require review
      from Code Owners" in repo settings (or via `gh api`).
 6. Create the `{{BRANCH}}` branch and push it to origin.
+
+> **Note on multi-stage pipelines:** if your team promotes through
+> stages (e.g., `qa` → `staging` → `main`), set `{{MAIN_BRANCH}}` to
+> whichever branch the contributor's PR should land on — usually the
+> earliest stage. You handle the rest of the promotion path on your
+> own; the contributor doesn't need to know.
 
 Then point your design / PM contributors at `CONTRIBUTING.md`. It walks
 them through their own one-time setup (~15 min, Terminal-based, no
