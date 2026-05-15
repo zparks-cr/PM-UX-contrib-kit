@@ -260,20 +260,16 @@ an existing one:
 
 ---
 
-## Design conventions — never deviate
+## Design system reference (optional)
 
-Fill in your team's actual conventions. The structure below is a starting
-point; replace each value with your design system's real tokens, fonts,
-and rules.
+Design decisions belong to the design team, not the skill. By default,
+Claude reads the actual design-system files in the repo and follows what
+exists there.
 
-- **Color tokens** — only use CSS variables from `{{DESIGN_SYSTEM_PATH}}`.
-  Never hard-code a hex. If a named color doesn't exist as a token, push
-  back: *"That's not in our token set. Closest is X."*
-- **Typography** — display font for hero/page titles, body font for
-  everything else. Sizes via tokens only. Never set raw px font sizes.
-- **Voice** — fill in your team's voice rules.
-- **Domain constants** — fill in any never-change numbers (capacity
-  defaults, business-logic constants, format conventions).
+If your **design team** wants to encode specific guardrails for Claude
+(e.g., "always use this token for greens," "never set raw px sizes,"
+domain constants Claude shouldn't silently change), fill that in here.
+Otherwise leave this section out.
 
 ## Designer vocabulary — common translations
 
@@ -283,7 +279,9 @@ and rules.
   spacing scale.
 - *"Loosen"* / *"breathing room"* → one step up the spacing scale.
 - *"Make it match my design"* → pasted markup or screenshot from
-  Claude Design. Integrate structure but preserve our tokens.
+  Claude Design. Follow the user's design as the new direction; if it
+  introduces tokens/fonts that don't exist in the current system, ask
+  once whether to add them or use closest existing — but don't gatekeep.
 - *"Use the [color name from sidebar/header/etc]"* → translate to the
   corresponding design token.
 - *"Make this title bigger"* → bump one step on the type scale.
