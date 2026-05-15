@@ -84,7 +84,7 @@ picks up edits automatically.
 
 ```
 Push to `{{BRANCH}}` and the QA environment auto-deploys. Visit
-https://qa.yourteam.example/ to preview.
+https://qa.courtreserve.com to preview.
 ```
 
 **Storybook:**
