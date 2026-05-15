@@ -1,5 +1,9 @@
 # PM/UX contrib kit
 
+> **Define product changes by making them.** PMs ship requirements as
+> code. Designers ship UI as code. Engineers ship the systems work only
+> they can do. No spec docs, no ticket queues, no waiting on each other.
+
 Reusable templates for setting up a Claude-Desktop-driven contribution
 workflow on any team repo. Copy the three templates into your repo,
 find-replace the placeholders, done.
