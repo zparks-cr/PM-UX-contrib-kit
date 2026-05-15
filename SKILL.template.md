@@ -50,14 +50,23 @@ asks "what do I do now?" / "where do I start?" / "what's next?":
 2. **Make the edit** using the `Edit` tool. Prefer the smallest surgical change.
 3. **Show the diff in plain English** before committing. Don't paste raw
    diff output. Describe what changed.
-4. **Commit + push to `{{BRANCH}}`** with a clear, descriptive message:
+4. **Sanity-check the edit before committing.** If the edit touched HTML,
+   JS, or CSS in any allowed-to-edit path:
+   - Grep for obvious breakage (unclosed tags, unmatched braces, broken
+     script blocks, missing mount targets).
+   - If anything looks suspect, open the file in the preview (per
+     "Previewing changes locally" below) or invoke `webapp-testing` for
+     a quick load check.
+   - **Don't commit broken code.** A broken push to `{{BRANCH}}` wastes
+     the user's time when they open the preview.
+5. **Commit + push to `{{BRANCH}}`** with a clear, descriptive message:
    ```
    git add -A
    git commit -m "ui: <short description>"
    git push origin {{BRANCH}}
    ```
-5. **Report how to see it.** See "Previewing changes locally" below.
-6. **When the user says "I'm done"** / "ship this" / "ready to review":
+6. **Report how to see it.** See "Previewing changes locally" below.
+7. **When the user says "I'm done"** / "ship this" / "ready to review":
    - Push any pending commits to `{{BRANCH}}`.
    - Open a pull request:
      ```
@@ -129,6 +138,13 @@ structural direction and use our tokens?"*
 looks like a new component pattern. Want me to build it inside the
 existing surface, or as a reusable piece in our design system?"*
 
+**If the URL pasted isn't `claude.ai/design`** (e.g., Figma share link,
+Dribbble shot, screenshot URL): treat the visual as reference only. The
+token translation guidance above doesn't apply (you don't know their
+design system). Ask one clarifying question: *"What's the takeaway from
+this? Layout structure, specific colors, a font treatment? I'll extract
+that piece and apply our tokens."* Don't try to import outside tokens.
+
 ### During a session
 
 - *"Save this"* / *"Save what we have"* → commit + push to `{{BRANCH}}`.
@@ -142,6 +158,27 @@ existing surface, or as a reusable piece in our design system?"*
   the new attempt.
 - *"Pause here"* / *"Done for the day"* → commit + push everything
   pending to `{{BRANCH}}`. **Don't** open a PR.
+- *"Scrap everything"* / *"Start over"* / *"Forget all that"* / *"Trash
+  this"* → **Always confirm scope first.** Ask: *"To make sure I
+  understand, do you want to undo:*
+  - *just the last change (one edit), or*
+  - *the last commit, or*
+  - *today's work (since the last session start), or*
+  - *everything on `{{BRANCH}}` that hasn't been merged to `{{MAIN_BRANCH}}` yet?"*
+
+  Default to the **smallest** scope if the user is vague. Never reset to
+  `{{MAIN_BRANCH}}` (that wipes unmerged work). For "everything unmerged"
+  scope, push back: *"That would wipe everything on `{{BRANCH}}`. Are
+  you sure? If so, ping {{REVIEWER}} to do it manually."*
+- *"Bring back the X we removed"* / *"Restore that section we deleted"*
+  → Find the removal in history:
+  ```
+  git log --oneline --all -- <relevant-file>
+  git show <commit-before-removal>:<file>
+  ```
+  Extract the relevant chunk and **splice it back into the current
+  file**. Don't `git revert` the removal commit blindly — that commit
+  may have other changes the user wants to keep.
 
 ### Finishing a session
 
@@ -170,6 +207,18 @@ existing surface, or as a reusable piece in our design system?"*
   After more edits in the same session, the user just refreshes the open
   tab (or the dev server hot-reloads). Don't re-trigger the preview
   unless explicitly asked.
+
+### When the user wants to add something new (not edit existing)
+
+If the request is to ADD a section, component, or page rather than tweak
+an existing one:
+
+1. **Check for similar existing first.** Grep the codebase for the
+   pattern (a card, a modal, a banner). If something close already
+   exists, ask: *"We have a similar card on [page]. Want me to clone-
+   and-modify that, or add a totally new one?"*
+2. **Ask which surface/path it belongs to** if not specified.
+3. **Apply per normal flow** — edit, show diff, sanity-check, commit.
 
 ### Status checks
 
@@ -289,6 +338,23 @@ Fill in for your stack. Examples:
   errors.
 - For test failures: run your team's test suite and surface the relevant
   failure.
+
+## Where things live (map for quick lookups)
+
+Fill in the canonical paths/folders the user might ask about. Use this
+map when they say *"where's the X page?"* / *"what file controls the
+sidebar?"* / *"where do I find the colors?"*.
+
+Example structure (replace with your team's actual paths):
+
+- `src/pages/<feature>/` — the main user-facing surfaces
+- `src/components/` — shared UI primitives
+- `design-system/` — tokens, fonts, base styles
+- `tests/` — test specs (protected)
+- `mock-data/` or `fixtures/` — sample data (protected)
+
+If the user asks for something not in this map, grep first and report
+back rather than guessing.
 
 ## Cheat sheet (paste back when asked)
 
