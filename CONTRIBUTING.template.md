@@ -7,17 +7,24 @@ plain English; Claude makes the actual code changes for you.
 {{REVIEWER}} (the tech lead) reviews your PRs and merges to
 `{{MAIN_BRANCH}}`.
 
-## One-time setup (~15 min, ping {{REVIEWER}} if you get stuck)
+## One-time setup (~20 min, ping {{REVIEWER}} if you get stuck)
 
-You already have Claude Desktop installed. The next few steps happen in
-Terminal so your Mac can talk to GitHub. After this you won't open
-Terminal again.
+Most of this is one-time tooling so your Mac can talk to GitHub. After
+this you won't open Terminal again.
 
-### 1. Open Terminal
+### 1. Install Claude Desktop
+
+Download from [claude.com/download](https://claude.com/download).
+Open the `.dmg` and drag the Claude icon to Applications. Sign in with
+your Anthropic account.
+
+> The Code tab needs a Pro plan. Ping {{REVIEWER}} if you don't have one.
+
+### 2. Open Terminal
 
 ⌘ + space → type `terminal` → Enter.
 
-### 2. Install Homebrew (if you don't already have it)
+### 3. Install Homebrew (if you don't already have it)
 
 Check:
 
@@ -34,7 +41,7 @@ If it says `command not found`, install:
 Enter your Mac password when asked. You won't see characters as you
 type; that's normal. Takes 3–5 minutes.
 
-### 3. Install GitHub CLI
+### 4. Install GitHub CLI
 
 Still in Terminal:
 
@@ -42,7 +49,7 @@ Still in Terminal:
 brew install gh
 ```
 
-### 4. Sign in to GitHub
+### 5. Sign in to GitHub
 
 Still in Terminal:
 
@@ -56,7 +63,7 @@ Terminal shows, paste it into the browser tab that opens, click Authorize.
 
 > Ping {{REVIEWER}} if you haven't been added to the {{GH_ORG}} org.
 
-### 5. Clone the project
+### 6. Clone the project
 
 Still in Terminal. Paste this whole line and press Enter:
 
@@ -67,7 +74,7 @@ cd ~ && mkdir -p {{LOCAL_FOLDER}} && cd {{LOCAL_FOLDER}} && gh repo clone {{GH_R
 This drops the project into a `{{LOCAL_FOLDER}}/` folder inside your home
 directory. You can close Terminal now; you won't need it again.
 
-### 6. Point Claude Desktop at the project
+### 7. Point Claude Desktop at the project
 
 Open Claude Desktop → **Code** tab → **Select folder** → navigate to
 **home → {{LOCAL_FOLDER}} → {{REPO_NAME}}** → Open.
