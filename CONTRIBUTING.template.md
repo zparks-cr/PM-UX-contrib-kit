@@ -91,9 +91,14 @@ Open Claude Desktop → **Code** tab → **Select folder** → navigate to
 1. Open Claude Desktop → **Code** tab → **New session**.
 2. Say *"Let's get started."*
 
-Claude pulls the latest from `{{MAIN_BRANCH}}` into the `{{BRANCH}}`
-branch so you're working off current code. Then it'll ask what you want
-to do.
+Claude pulls the latest from `{{MAIN_BRANCH}}` into your personal branch
+(named after you — lowercased, dashes for spaces) and creates it if it
+doesn't exist yet. Then it'll ask what you want to do.
+
+> **Why a personal branch?** Each contributor (PM, UX, whoever) gets
+> their own branch so you don't step on each other's work. Claude
+> derives yours automatically from your git username — you never have
+> to think about it.
 
 ### Two ways to iterate
 
@@ -148,7 +153,7 @@ folders, which would break source awareness and rendering.
 3. Click **Share handoff to Claude Code** when you're happy.
 4. Open Claude Code's **Code** tab. Paste the handoff (or tell Claude
    *"fetch this Claude Design URL: ..."*).
-5. Claude Code applies the changes, commits to `{{BRANCH}}`, and opens a PR.
+5. Claude Code applies the changes, commits to your branch, and opens a PR.
 
 **Best for:** redesigning an existing page, designing a new component
 from scratch, comparing multiple visual directions side-by-side,
@@ -160,9 +165,9 @@ preserved-structure phrase above.
 
 ### Ending your day (or finishing a batch)
 
-- *"I'm done."* / *"Send to {{REVIEWER}}."* — Claude pushes
-  `{{BRANCH}}` and opens a PR.
-- *"Pause here."* — Claude saves your work to `{{BRANCH}}` without
+- *"I'm done."* / *"Send to {{REVIEWER}}."* — Claude pushes your branch
+  and opens a PR.
+- *"Pause here."* — Claude saves your work to your branch without
   opening a PR.
 
 {{REVIEWER}} reviews the PR and merges it onto your team's path to
@@ -201,9 +206,9 @@ Fill in for your repo. Example structure:
 
 ## How the full workflow runs
 
-1. Say *"Let's get started."* Claude pulls the latest code into the
-   `{{BRANCH}}` branch.
-2. Tell Claude what to change. Claude edits and pushes to `{{BRANCH}}`.
+1. Say *"Let's get started."* Claude pulls the latest code into your
+   personal branch (or creates it the first time).
+2. Tell Claude what to change. Claude edits and pushes to your branch.
 3. *"I'm done. Send to {{REVIEWER}}."* → Claude opens a Pull Request.
 4. {{REVIEWER}} gets a Slack ping, reviews, merges if good.
 5. Changes go live at <{{LIVE_URL}}> after merge (or after whatever

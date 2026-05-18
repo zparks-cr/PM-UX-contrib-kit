@@ -16,12 +16,34 @@ described in design-oriented language ("tighten the header", "make it
 pop", "use the green from the sidebar"). Execute them directly in the
 code.
 
+## Per-contributor branch model
+
+Every contributor works on their **own branch**, named after them. This
+keeps multiple contributors (PM, UX, etc.) from stepping on each other.
+
+**At session start, derive the contributor's branch name from
+`git config user.name`:**
+
+- Read `git config user.name` (e.g., `"Jae Ko"`)
+- Sanitize: lowercase, replace spaces with dashes, strip non-alphanumeric
+  (e.g., `"Jae Ko"` → `jae-ko`)
+- That's the contributor's branch. **All subsequent git operations
+  target this derived branch.** When this skill says "the user's
+  branch" or "their branch," it means this derived name.
+
+If `git config user.name` isn't set, ask the user what to call their
+branch and set it: `git config user.name "<name>"`.
+
+If the derived branch doesn't exist yet, create it from `{{MAIN_BRANCH}}`
+and push (covered in "Starting a session" below).
+
 Common workflow:
 
 1. Design exploration may happen in `claude.ai/design` (web).
 2. The handoff arrives in this session as pasted markup, a description,
    a screenshot, or a Claude Design "share to Code" handoff.
-3. You apply it to the real codebase, commit, push to `{{BRANCH}}`.
+3. You apply it to the real codebase, commit, push to the contributor's
+   branch.
 4. The user previews their changes (see "Previewing changes locally"
    below). {{REVIEWER}} (the team's tech lead) reviews the PR and merges
    to `{{MAIN_BRANCH}}` on their own cadence. Deploy timing is up to
@@ -34,12 +56,16 @@ Common workflow:
 When a fresh Claude Code session opens in this repo, or when the user
 asks "what do I do now?" / "where do I start?" / "what's next?":
 
-1. **Check git state.** Run `git status` and `git branch --show-current`.
-2. **Make sure you're on `{{BRANCH}}`.** If not, switch: `git checkout
-   {{BRANCH}}`. If there are uncommitted changes on the wrong branch,
-   confirm before stashing or discarding them.
-3. **Pull latest from origin/{{BRANCH}}** so you're not editing stale code.
-4. **Report state in one short sentence** and prompt for the next change.
+1. **Derive the contributor's branch name** from `git config user.name`
+   (see "Per-contributor branch model" above).
+2. **Check git state.** Run `git status` and `git branch --show-current`.
+3. **Make sure you're on the contributor's branch.** If not, switch:
+   `git checkout <branch>` (creating from `{{MAIN_BRANCH}}` if it
+   doesn't exist yet — see "Starting a session" for the full create-or-
+   checkout sequence). If there are uncommitted changes on the wrong
+   branch, confirm before stashing or discarding them.
+4. **Pull latest from origin/<branch>** so you're not editing stale code.
+5. **Report state in one short sentence** and prompt for the next change.
 
 ---
 
@@ -57,20 +83,21 @@ asks "what do I do now?" / "where do I start?" / "what's next?":
    - If anything looks suspect, open the file in the preview (per
      "Previewing changes locally" below) or invoke `webapp-testing` for
      a quick load check.
-   - **Don't commit broken code.** A broken push to `{{BRANCH}}` wastes
-     the user's time when they open the preview.
-5. **Commit + push to `{{BRANCH}}`** with a clear, descriptive message:
+   - **Don't commit broken code.** A broken push wastes the user's time
+     when they open the preview.
+5. **Commit + push to the contributor's branch** with a clear,
+   descriptive message:
    ```
    git add -A
    git commit -m "ui: <short description>"
-   git push origin {{BRANCH}}
+   git push origin <branch>
    ```
 6. **Report how to see it.** See "Previewing changes locally" below.
 7. **When the user says "I'm done"** / "ship this" / "ready to review":
-   - Push any pending commits to `{{BRANCH}}`.
+   - Push any pending commits.
    - Open a pull request:
      ```
-     gh pr create --base {{MAIN_BRANCH}} --head {{BRANCH}} --title "<short summary>" --body "<bulleted change list>"
+     gh pr create --base {{MAIN_BRANCH}} --head <branch> --title "<short summary>" --body "<bulleted change list>"
      ```
    - **Do not merge.** Only {{REVIEWER}} can merge to `{{MAIN_BRANCH}}`.
      Explain briefly: *"PR is up. {{REVIEWER}} gets notified and reviews.
@@ -87,22 +114,38 @@ short sentence.** Only ask if something is ambiguous or destructive.
 ### Starting a session — from scratch
 
 - *"Let's get started"* / *"Let's begin"* / *"Starting a new session"* /
-  *"Ready to work"* / *"I'm back"* → Pull the most recent code:
-  ```
-  git fetch origin
-  git checkout {{BRANCH}}
-  git pull origin {{BRANCH}}
-  ```
-  Then check if `{{MAIN_BRANCH}}` has moved ahead of `{{BRANCH}}`.
-  If so, merge `{{MAIN_BRANCH}}` into `{{BRANCH}}`:
-  ```
-  git merge origin/{{MAIN_BRANCH}} --no-edit
-  ```
-  Report in one sentence: *"You're on `{{BRANCH}}`, up to date with
-  everything {{REVIEWER}} has merged. What do you want to change?"*
+  *"Ready to work"* / *"I'm back"* → **Full branch setup:**
+
+  1. Derive the contributor's branch from `git config user.name`
+     (sanitize: lowercase, spaces→dashes, strip non-alphanumeric).
+  2. `git fetch origin`
+  3. Check if the branch exists locally or on origin:
+     ```
+     git rev-parse --verify <branch> 2>/dev/null
+     git ls-remote --heads origin <branch>
+     ```
+  4. **If it doesn't exist anywhere,** create it from `{{MAIN_BRANCH}}`
+     and push:
+     ```
+     git checkout -b <branch> origin/{{MAIN_BRANCH}}
+     git push -u origin <branch>
+     ```
+  5. **If it exists,** check it out and pull latest:
+     ```
+     git checkout <branch>
+     git pull origin <branch>
+     ```
+  6. Check if `{{MAIN_BRANCH}}` has moved ahead since the user's last
+     session. If so, merge `{{MAIN_BRANCH}}` in so they're not building
+     on stale code:
+     ```
+     git merge origin/{{MAIN_BRANCH}} --no-edit
+     ```
+  7. Report in one sentence: *"You're on `<branch>`, up to date with
+     everything {{REVIEWER}} has merged. What do you want to change?"*
 
 - *"What did I work on last?"* / *"What did we change last time?"* →
-  `git log --oneline {{BRANCH}} ^{{MAIN_BRANCH}} -10` and summarize.
+  `git log --oneline <branch> ^{{MAIN_BRANCH}} -10` and summarize.
 
 ### Starting a session — from a Claude Design handoff
 
@@ -120,13 +163,14 @@ a structured handoff message, or a description with assets.
 
 **How to handle, every time:**
 
-1. **Orient the repo first** if not already done this session.
+1. **Orient the repo first** if not already done this session (derive
+   branch, check out, pull latest).
 2. **Treat the handoff as a visual reference, not literal code to drop in.**
 3. **Read the structural intent.** New section? Restyled card? Redesigned
    modal? Layout overhaul of an existing surface?
 4. **Find the closest existing element** that maps to it. Don't add
    brand-new components if an existing one can be tweaked.
-5. **Translate tokens to ours.** (See "Design conventions" below.)
+5. **Translate tokens to ours.** (See "Design system reference" below.)
 6. **Restate the plan in one short sentence** before editing.
 7. **Apply and commit** per the normal flow.
 
@@ -161,8 +205,8 @@ import):
 
 ### During a session
 
-- *"Save this"* / *"Save what we have"* → commit + push to `{{BRANCH}}`.
-  Don't open a PR yet.
+- *"Save this"* / *"Save what we have"* → commit + push to the user's
+  branch. Don't open a PR yet.
 - *"Undo that"* / *"Revert that change"* / *"Go back"* / *"Never mind"* →
   if uncommitted, `git checkout -- <file>`. If already committed and
   pushed, create a revert commit and push. Always confirm scope first.
@@ -171,18 +215,18 @@ import):
 - *"Try a different approach"* → revert the current attempt, then make
   the new attempt.
 - *"Pause here"* / *"Done for the day"* → commit + push everything
-  pending to `{{BRANCH}}`. **Don't** open a PR.
+  pending. **Don't** open a PR.
 - *"Scrap everything"* / *"Start over"* / *"Forget all that"* / *"Trash
   this"* → **Always confirm scope first.** Ask: *"To make sure I
   understand, do you want to undo:*
   - *just the last change (one edit), or*
   - *the last commit, or*
   - *today's work (since the last session start), or*
-  - *everything on `{{BRANCH}}` that hasn't been merged to `{{MAIN_BRANCH}}` yet?"*
+  - *everything on your branch that hasn't been merged to `{{MAIN_BRANCH}}` yet?"*
 
   Default to the **smallest** scope if the user is vague. Never reset to
   `{{MAIN_BRANCH}}` (that wipes unmerged work). For "everything unmerged"
-  scope, push back: *"That would wipe everything on `{{BRANCH}}`. Are
+  scope, push back: *"That would wipe everything on your branch. Are
   you sure? If so, ping {{REVIEWER}} to do it manually."*
 - *"Bring back the X we removed"* / *"Restore that section we deleted"*
   → Find the removal in history:
@@ -198,14 +242,14 @@ import):
 
 - *"I'm finished"* / *"I'm done"* / *"Send to {{REVIEWER}}"* / *"Ready
   for review"* / *"Ship it"* →
-  1. Push pending commits to `{{BRANCH}}`.
+  1. Push pending commits.
   2. Open a PR:
      ```
-     gh pr create --base {{MAIN_BRANCH}} --head {{BRANCH}} \
+     gh pr create --base {{MAIN_BRANCH}} --head <branch> \
        --title "<short summary of the batch>" \
        --body "<bulleted list of changes from this session>"
      ```
-     Pull body bullets from `git log origin/{{MAIN_BRANCH}}..{{BRANCH}} --oneline`.
+     Pull body bullets from `git log origin/{{MAIN_BRANCH}}..<branch> --oneline`.
   3. **Don't merge.** Report: *"Done. Sent to {{REVIEWER}} as PR #N.
      They'll merge and deploy on their own schedule."*
   4. If a PR already exists from a prior session, new pushes auto-update
@@ -246,17 +290,19 @@ an existing one:
 ### Edge cases worth handling gracefully
 
 - **A change is made but the user never says "I'm done."** That's fine.
-  The work is safe on `{{BRANCH}}`. Don't auto-open a PR. Wait.
+  The work is safe on their branch. Don't auto-open a PR. Wait.
 - **User says "I'm done" but the diff is empty.** Don't open a PR for
   nothing. Report: *"Nothing's changed since the last push. What did you
   want to send?"*
 - **User says "delete this page" or "remove this section".** Clarify
   first. Default to commenting out, not deleting.
-- **User says "save" while on the wrong branch.** Switch to `{{BRANCH}}`
+- **User says "save" while on the wrong branch.** Switch to their branch
   first, then commit. Report what happened.
 - **User asks to undo something already merged to `{{MAIN_BRANCH}}`.**
   Clarify: *"That's already on the live site. Want me to propose a revert
   PR for {{REVIEWER}} to approve?"*
+- **`git config user.name` isn't set.** Don't guess — ask the user what
+  they want their branch called. Then set: `git config user.name "<name>"`.
 
 ---
 
@@ -326,15 +372,17 @@ what you're trying to achieve? There may be a safer path."*
 
 If one of these is requested, refuse and explain:
 *"I'm not allowed to do that from this skill. {{REVIEWER}} owns merges
-to `{{MAIN_BRANCH}}`. Your changes go to `{{BRANCH}}`, then they review."*
+to `{{MAIN_BRANCH}}`. Your changes go to your branch, then they review."*
 
 ## What's safe to do without asking
 
 - `git status`, `git diff`, `git log`, `git branch` — read-only inspection
-- `git checkout {{BRANCH}}` — switch to the working branch
-- `git pull origin {{BRANCH}}` — get latest
-- `git add`, `git commit`, `git push origin {{BRANCH}}`
-- `gh pr create --base {{MAIN_BRANCH}} --head {{BRANCH}}` — open a PR
+- `git config user.name` — read the contributor's identity (for branch derivation)
+- `git checkout <contributor-branch>` — switch to the user's branch
+- `git checkout -b <contributor-branch> origin/{{MAIN_BRANCH}}` — create the user's branch from main
+- `git pull origin <contributor-branch>` — get latest on their branch
+- `git add`, `git commit`, `git push origin <contributor-branch>`
+- `gh pr create --base {{MAIN_BRANCH}} --head <contributor-branch>` — open a PR
 - `gh pr view`, `gh pr list` — read PR status
 - Editing files in the allowed list above
 
@@ -377,8 +425,8 @@ back rather than guessing.
 > sidebar", "make this title bigger").
 >
 > **What I won't do:** push to `{{MAIN_BRANCH}}`, force-push, delete
-> files, or edit data/config files. Your changes go to a branch called
-> `{{BRANCH}}`. {{REVIEWER}} reviews and merges.
+> files, or edit data/config files. Your changes go to your personal
+> branch (named after you). {{REVIEWER}} reviews and merges.
 >
 > **How to see your changes:** see the preview steps in `CONTRIBUTING.md`.
 > To see them on the live URL, open a PR; {{REVIEWER}} reviews and

@@ -59,8 +59,15 @@ Both templates use these placeholders. Find-replace once per file:
 | `{{PROJECT_DESC}}` | One-liner describing the codebase | `Acme's customer-facing web app` |
 | `{{LIVE_URL}}` | Production URL (if any) | `https://my-app.com` |
 | `{{REVIEWER}}` | First-name of the tech lead who merges contributor PRs | `Alex` |
-| `{{BRANCH}}` | Contributors' working branch | `ux` |
 | `{{MAIN_BRANCH}}` | The branch the tech lead merges contributor PRs into. Depends on your team's pipeline — could be `main` for a single-branch flow, or `qa` / `staging` / `develop` for teams with multi-stage promotion. The contributor doesn't need to know what's downstream. | `main` or `qa` |
+
+> **Branches are per-contributor, derived automatically.** The skill
+> reads each contributor's `git config user.name` and creates a branch
+> named after them (`"Jae Ko"` → `jae-ko`). You don't pre-create
+> branches or pick a single shared `{{BRANCH}}` value. Multiple
+> contributors (PM, UX, etc.) each get their own personal branch
+> automatically. The skill creates branches on first session if they
+> don't exist yet.
 | `{{LOCAL_FOLDER}}` | Where to clone on disk (under `~/`) | `code` |
 | `{{PREVIEW_FLOW}}` | How the contributor previews changes (multi-line, see below) | see "Preview flow" section |
 
@@ -87,7 +94,8 @@ picks up edits automatically.
 **QA environment:**
 
 ```
-Push to `{{BRANCH}}` and the QA environment auto-deploys. Visit
+Push to your personal branch and the QA environment auto-deploys
+(per-branch preview, if your CI is set up for it). Visit
 https://qa.yourteam.example to preview.
 ```
 
@@ -127,21 +135,15 @@ Or download as zip from the GitHub web view if you don't have `gh`.
 ### Step 1 — Decide your placeholder values before you find-replace
 
 Pick concrete values for each of the placeholders in the table above.
-The two that need real thought:
+The one that needs real thought:
 
-- **`{{BRANCH}}`** — what your non-engineering contributors push to.
-  Two patterns:
-  - *Separate contributor branch (recommended):* a fresh branch just
-    for this workflow (`ux`, `design`, etc.). Keeps non-eng work
-    isolated from engineering branches. No merge conflicts with active
-    eng work.
-  - *Existing dev branch:* if your team already has a `dev` / `staging`
-    branch that engineers also push to, contributors can share it.
-    Simpler but risks conflicts with concurrent eng work.
 - **`{{MAIN_BRANCH}}`** — where contributor PRs target. Often `main`,
   but for multi-stage teams it might be `qa` / `staging` / `develop`
   (whichever stage contributor changes land on first). You handle
   promotion downstream.
+
+Contributor branches are derived per-person automatically — no choice
+needed here.
 
 ### Step 2 — Copy the three template files into your repo
 
@@ -185,17 +187,7 @@ In your repo's Settings → Branches (or via `gh api`):
 
 This is what enforces *"only the tech lead can merge"* on the GitHub side.
 
-### Step 6 — Create + push the contributor branch
-
-```
-git checkout -b {{BRANCH}}
-git push -u origin {{BRANCH}}
-git checkout {{MAIN_BRANCH}}
-```
-
-(Substitute your actual branch names here.)
-
-### Step 7 — Commit + push the kit files to `{{MAIN_BRANCH}}`
+### Step 6 — Commit + push the kit files to `{{MAIN_BRANCH}}`
 
 ```
 git add CONTRIBUTING.md .claude/ .github/CODEOWNERS
@@ -206,7 +198,7 @@ git push origin {{MAIN_BRANCH}}
 If branch protection blocks this because you just enabled it, push via
 `--admin` once or temporarily disable protection during setup.
 
-### Step 8 (optional) — Set up Slack notifications
+### Step 7 (optional) — Set up Slack notifications
 
 So you get pinged when a contributor opens a PR. Via GitHub's official
 Slack app:
@@ -223,7 +215,7 @@ You'll get notified on PR opens, ready-for-review, closes, and merges.
 Prerequisite: your Slack workspace admin needs to install the GitHub
 app from the Slack App Directory if `/github` isn't recognized.
 
-### Step 9 — Per-contributor onboarding
+### Step 8 — Per-contributor onboarding
 
 For each PM / designer joining the workflow:
 
