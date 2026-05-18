@@ -136,9 +136,26 @@ test specs, CI config, etc.).
 > own; the contributor doesn't need to know.
 
 Then point your design / PM contributors at `CONTRIBUTING.md`. It walks
-them through their own one-time setup (~15 min, Terminal-based, no
+them through their own one-time setup (~20 min, Terminal-based, no
 hand-holding required). Be on Slack to answer questions if they get
 stuck.
+
+### Get pinged when a contributor submits a PR (optional but recommended)
+
+If you don't want to refresh the GitHub PR tab all day, hook up Slack
+notifications via GitHub's official Slack app:
+
+- **In a channel** (whole team sees PR pings):
+  ```
+  /github subscribe <org>/<repo> pulls
+  ```
+- **In your DM with the GitHub bot** (just you sees them):
+  Open the **GitHub** app in Slack's sidebar → run the same command in
+  the DM.
+
+You'll get notified on PR opens, ready-for-review, closes, and merges.
+Prerequisite: your Slack workspace admin needs to install the GitHub
+app from the Slack App Directory if `/github` isn't recognized.
 
 ## What you DON'T need
 
