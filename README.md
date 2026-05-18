@@ -116,46 +116,122 @@ test specs, CI config, etc.).
 
 ## Install steps (tech lead does these once)
 
-1. Copy `CONTRIBUTING.template.md` → `CONTRIBUTING.md` at your repo root.
-2. Copy `SKILL.template.md` → `.claude/skills/ux-edits/SKILL.md`.
-3. Copy `settings.template.json` → `.claude/settings.json`.
-4. Find-replace the placeholders in all three files (VS Code's "Find in
-   Files" or `sed` works).
-5. Set up branch protection on `{{MAIN_BRANCH}}` (the branch contributor
-   PRs will target — `main` for single-branch flows, or your `qa` /
-   `staging` / `develop` branch for multi-stage pipelines):
-   - Add `* @your-github-handle` to `.github/CODEOWNERS`.
-   - Enable "Require a pull request before merging" + "Require review
-     from Code Owners" in repo settings (or via `gh api`).
-6. Create the `{{BRANCH}}` branch and push it to origin.
+### Step 0 — Get this kit
 
-> **Note on multi-stage pipelines:** if your team promotes through
-> stages (e.g., `qa` → `staging` → `main`), set `{{MAIN_BRANCH}}` to
-> whichever branch the contributor's PR should land on — usually the
-> earliest stage. You handle the rest of the promotion path on your
-> own; the contributor doesn't need to know.
+```
+gh repo clone zparks-cr/PM-UX-contrib-kit ~/Desktop/PM-UX-contrib-kit
+```
 
-Then point your design / PM contributors at `CONTRIBUTING.md`. It walks
-them through their own one-time setup (~20 min, Terminal-based, no
-hand-holding required). Be on Slack to answer questions if they get
-stuck.
+Or download as zip from the GitHub web view if you don't have `gh`.
 
-### Get pinged when a contributor submits a PR (optional but recommended)
+### Step 1 — Decide your placeholder values before you find-replace
 
-If you don't want to refresh the GitHub PR tab all day, hook up Slack
-notifications via GitHub's official Slack app:
+Pick concrete values for each of the placeholders in the table above.
+The two that need real thought:
+
+- **`{{BRANCH}}`** — what your non-engineering contributors push to.
+  Two patterns:
+  - *Separate contributor branch (recommended):* a fresh branch just
+    for this workflow (`ux`, `design`, etc.). Keeps non-eng work
+    isolated from engineering branches. No merge conflicts with active
+    eng work.
+  - *Existing dev branch:* if your team already has a `dev` / `staging`
+    branch that engineers also push to, contributors can share it.
+    Simpler but risks conflicts with concurrent eng work.
+- **`{{MAIN_BRANCH}}`** — where contributor PRs target. Often `main`,
+  but for multi-stage teams it might be `qa` / `staging` / `develop`
+  (whichever stage contributor changes land on first). You handle
+  promotion downstream.
+
+### Step 2 — Copy the three template files into your repo
+
+```
+cd ~/your-repo
+cp ~/Desktop/PM-UX-contrib-kit/CONTRIBUTING.template.md ./CONTRIBUTING.md
+mkdir -p .claude/skills/ux-edits
+cp ~/Desktop/PM-UX-contrib-kit/SKILL.template.md .claude/skills/ux-edits/SKILL.md
+cp ~/Desktop/PM-UX-contrib-kit/settings.template.json .claude/settings.json
+```
+
+### Step 3 — Find-replace the placeholders
+
+In VS Code: ⌘+Shift+F → toggle "replace" → run each one across the
+three files. Or via `sed`:
+
+```
+sed -i '' 's|{{REPO_NAME}}|my-app|g' CONTRIBUTING.md .claude/skills/ux-edits/SKILL.md .claude/settings.json
+sed -i '' 's|{{GH_REPO}}|acme/my-app|g' CONTRIBUTING.md .claude/skills/ux-edits/SKILL.md .claude/settings.json
+# repeat for each placeholder in the table above
+```
+
+Also paste your `{{PREVIEW_FLOW}}` block (see "Preview flow" section
+above) into the two `{{PREVIEW_FLOW}}` slots in CONTRIBUTING.md and
+SKILL.md.
+
+### Step 4 — Add `.github/CODEOWNERS`
+
+```
+mkdir -p .github
+echo "* @your-github-handle" > .github/CODEOWNERS
+```
+
+### Step 5 — Enable branch protection on `{{MAIN_BRANCH}}`
+
+In your repo's Settings → Branches (or via `gh api`):
+
+- Require a pull request before merging
+- Require review from Code Owners
+- (Optional) Dismiss stale reviews + require conversation resolution
+
+This is what enforces *"only the tech lead can merge"* on the GitHub side.
+
+### Step 6 — Create + push the contributor branch
+
+```
+git checkout -b {{BRANCH}}
+git push -u origin {{BRANCH}}
+git checkout {{MAIN_BRANCH}}
+```
+
+(Substitute your actual branch names here.)
+
+### Step 7 — Commit + push the kit files to `{{MAIN_BRANCH}}`
+
+```
+git add CONTRIBUTING.md .claude/ .github/CODEOWNERS
+git commit -m "Add PM/UX contrib kit"
+git push origin {{MAIN_BRANCH}}
+```
+
+If branch protection blocks this because you just enabled it, push via
+`--admin` once or temporarily disable protection during setup.
+
+### Step 8 (optional) — Set up Slack notifications
+
+So you get pinged when a contributor opens a PR. Via GitHub's official
+Slack app:
 
 - **In a channel** (whole team sees PR pings):
   ```
-  /github subscribe <org>/<repo> pulls
+  /github subscribe acme/my-app pulls
   ```
 - **In your DM with the GitHub bot** (just you sees them):
-  Open the **GitHub** app in Slack's sidebar → run the same command in
-  the DM.
+  Open the **GitHub** app in Slack's sidebar → run the same command
+  in the DM.
 
 You'll get notified on PR opens, ready-for-review, closes, and merges.
 Prerequisite: your Slack workspace admin needs to install the GitHub
 app from the Slack App Directory if `/github` isn't recognized.
+
+### Step 9 — Per-contributor onboarding
+
+For each PM / designer joining the workflow:
+
+1. Add them to your GitHub org with **write** access on the repo.
+2. Point them at `CONTRIBUTING.md`. It walks them through their own
+   one-time setup (~20 min, Terminal-based, no hand-holding required).
+3. Be on Slack to answer questions if they get stuck on Homebrew, gh
+   auth, or anything else.
 
 ## What you DON'T need
 
