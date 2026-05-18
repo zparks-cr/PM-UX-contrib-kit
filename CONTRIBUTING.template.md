@@ -97,6 +97,11 @@ to do.
 
 ### Two ways to iterate
 
+The project files live on your Mac in `~/{{LOCAL_FOLDER}}/{{REPO_NAME}}/`.
+Claude does all the editing; you don't open a code editor. You see your
+changes via your team's preview flow (see "Previewing changes" below) —
+typically by refreshing the open browser tab, since files are local.
+
 You have two paths. Pick whichever fits the task.
 
 #### Path A: Direct in Claude Code (default)
@@ -196,20 +201,14 @@ Fill in for your repo. Example structure:
 
 ## How the full workflow runs
 
-1. Open Claude Desktop's **Code** tab. Tell Claude what to change.
-2. Claude makes the edit on the `{{BRANCH}}` branch and pushes it. Either:
-   - You keep iterating directly in Code (Path A), or
-   - You designed in Claude Design first and handed off (Path B).
-3. When you say *"I'm done. Send to {{REVIEWER}},"* Claude opens a
-   Pull Request.
-4. {{REVIEWER}} gets a Slack ping and reviews the PR.
-5. If it's good, {{REVIEWER}} merges it onto your team's path to
-   production. Your changes show up at the live URL (<{{LIVE_URL}}>)
-   once it's gone through.
-6. If something needs revising, {{REVIEWER}} comments on the PR or DMs
-   you. Go back to Claude Code, make the fix, push it (the PR
-   auto-updates), and tell them.
+1. Tell Claude what to change in the Code tab.
+2. Claude edits and pushes to the `{{BRANCH}}` branch.
+3. *"I'm done. Send to {{REVIEWER}}."* → Claude opens a Pull Request.
+4. {{REVIEWER}} gets a Slack ping, reviews, merges if good.
+5. Changes go live at <{{LIVE_URL}}> after merge (or after whatever
+   stages your team's pipeline runs).
+6. If revising: {{REVIEWER}} comments → fix in Claude Code →
+   *"push that"* → the PR auto-updates.
 
-That's the whole loop. You don't touch git, branches, PRs, or
-`{{MAIN_BRANCH}}` directly — Claude handles all of that. Your only
-inputs are: **what to change**, and **when it's ready for {{REVIEWER}}**.
+You never touch git, branches, PRs, or `{{MAIN_BRANCH}}` directly. Your
+inputs are: **what to change** and **when it's ready for {{REVIEWER}}**.
