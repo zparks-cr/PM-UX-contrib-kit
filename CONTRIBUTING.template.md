@@ -201,14 +201,13 @@ Fill in for your repo. Example structure:
 
 ## How the full workflow runs
 
-1. Tell Claude what to change in the Code tab.
-2. Claude edits and pushes to the `{{BRANCH}}` branch.
+1. Say *"Let's get started."* Claude pulls the latest code into the
+   `{{BRANCH}}` branch.
+2. Tell Claude what to change. Claude edits and pushes to `{{BRANCH}}`.
 3. *"I'm done. Send to {{REVIEWER}}."* → Claude opens a Pull Request.
 4. {{REVIEWER}} gets a Slack ping, reviews, merges if good.
 5. Changes go live at <{{LIVE_URL}}> after merge (or after whatever
    stages your team's pipeline runs).
-6. If revising: {{REVIEWER}} comments → fix in Claude Code →
-   *"push that"* → the PR auto-updates.
 
 You never touch git, branches, PRs, or `{{MAIN_BRANCH}}` directly. Your
 inputs are: **what to change** and **when it's ready for {{REVIEWER}}**.
