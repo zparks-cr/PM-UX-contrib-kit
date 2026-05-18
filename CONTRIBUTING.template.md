@@ -191,3 +191,25 @@ Fill in for your repo. Example structure:
 - `design-system/` — colors, fonts, primitives
 - `docs/` — documentation
 - `.claude/` — Claude's instructions (don't touch)
+
+---
+
+## How the full workflow runs
+
+1. Open Claude Desktop's **Code** tab. Tell Claude what to change.
+2. Claude makes the edit on the `{{BRANCH}}` branch and pushes it. Either:
+   - You keep iterating directly in Code (Path A), or
+   - You designed in Claude Design first and handed off (Path B).
+3. When you say *"I'm done. Send to {{REVIEWER}},"* Claude opens a
+   Pull Request.
+4. {{REVIEWER}} gets a Slack ping and reviews the PR.
+5. If it's good, {{REVIEWER}} merges it onto your team's path to
+   production. Your changes show up at the live URL (<{{LIVE_URL}}>)
+   once it's gone through.
+6. If something needs revising, {{REVIEWER}} comments on the PR or DMs
+   you. Go back to Claude Code, make the fix, push it (the PR
+   auto-updates), and tell them.
+
+That's the whole loop. You don't touch git, branches, PRs, or
+`{{MAIN_BRANCH}}` directly — Claude handles all of that. Your only
+inputs are: **what to change**, and **when it's ready for {{REVIEWER}}**.
