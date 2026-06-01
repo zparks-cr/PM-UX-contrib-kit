@@ -91,9 +91,10 @@ Open Claude Desktop → **Code** tab → **Select folder** → navigate to
 1. Open Claude Desktop → **Code** tab → **New session**.
 2. Say *"Let's get started."*
 
-Claude pulls the latest from `{{MAIN_BRANCH}}` into your personal branch
-(named after you — lowercased, dashes for spaces) and creates it if it
-doesn't exist yet. Then it'll ask what you want to do.
+Claude puts you on your personal branch (named after you — lowercased,
+dashes for spaces; created off `{{MAIN_BRANCH}}` if it doesn't exist yet),
+catches it up to `{{MAIN_BRANCH}}`, launches the preview, and opens it in
+your browser. Then it'll ask what you want to do.
 
 > **Why a personal branch?** Each contributor (PM, UX, whoever) gets
 > their own branch so you don't step on each other's work. Claude
@@ -105,7 +106,7 @@ doesn't exist yet. Then it'll ask what you want to do.
 The project files live on your Mac in `~/{{LOCAL_FOLDER}}/{{REPO_NAME}}/`.
 Claude does all the editing; you don't open a code editor. You see your
 changes via your team's preview flow (see "Previewing changes" below) —
-typically by refreshing the open browser tab, since files are local.
+Claude opens it at session start and you refresh the tab to see updates.
 
 You have two paths. Pick whichever fits the task.
 

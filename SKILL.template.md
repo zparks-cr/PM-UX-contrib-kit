@@ -141,8 +141,11 @@ short sentence.** Only ask if something is ambiguous or destructive.
      ```
      git merge origin/{{MAIN_BRANCH}} --no-edit
      ```
-  7. Report in one sentence: *"You're on `<branch>`, up to date with
-     everything {{REVIEWER}} has merged. What do you want to change?"*
+  7. **Launch the live preview** so they see the app right away. Start it
+     per this project's preview flow (see "Previewing changes locally" below).
+  8. Report in one sentence: *"You're on `<branch>`, up to date with
+     everything {{REVIEWER}} has merged, and the preview's open. What do
+     you want to change?"*
 
 - *"What did I work on last?"* / *"What did we change last time?"* →
   `git log --oneline <branch> ^{{MAIN_BRANCH}} -10` and summarize.
