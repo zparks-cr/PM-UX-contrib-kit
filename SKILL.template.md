@@ -85,8 +85,15 @@ asks "what do I do now?" / "where do I start?" / "what's next?":
      a quick load check.
    - **Don't commit broken code.** A broken push wastes the user's time
      when they open the preview.
-5. **Commit + push to the contributor's branch** with a clear,
-   descriptive message:
+5. **Re-sync with `{{MAIN_BRANCH}}`, then commit + push** to the
+   contributor's branch. Never push based on stale `{{MAIN_BRANCH}}` —
+   {{REVIEWER}} may have merged since the session started (including this
+   contributor's own earlier PR). Fetch and fold it in first:
+   ```
+   git fetch origin
+   git merge origin/{{MAIN_BRANCH}} --no-edit   # no-op if current; folds in anything merged
+   ```
+   Resolve any conflict (and re-verify the preview) before pushing. Then:
    ```
    git add -A
    git commit -m "ui: <short description>"
@@ -208,8 +215,10 @@ import):
 
 ### During a session
 
-- *"Save this"* / *"Save what we have"* → commit + push to the user's
-  branch. Don't open a PR yet.
+- *"Save this"* / *"Save what we have"* → re-sync then commit + push to the
+  user's branch (the fetch + `git merge origin/{{MAIN_BRANCH}} --no-edit`
+  guard from "When the user requests a change" step 5 applies to every
+  push). Don't open a PR yet.
 - *"Undo that"* / *"Revert that change"* / *"Go back"* / *"Never mind"* →
   if uncommitted, `git checkout -- <file>`. If already committed and
   pushed, create a revert commit and push. Always confirm scope first.
@@ -245,7 +254,9 @@ import):
 
 - *"I'm finished"* / *"I'm done"* / *"Send to {{REVIEWER}}"* / *"Ready
   for review"* / *"Ship it"* →
-  1. Push pending commits.
+  1. Re-sync first (`git fetch origin` + `git merge origin/{{MAIN_BRANCH}}
+     --no-edit`, the step-5 guard), then push pending commits — so the PR
+     is never based on stale `{{MAIN_BRANCH}}`.
   2. Open a PR:
      ```
      gh pr create --base {{MAIN_BRANCH}} --head <branch> \
@@ -254,7 +265,8 @@ import):
      ```
      Pull body bullets from `git log origin/{{MAIN_BRANCH}}..<branch> --oneline`.
   3. **Don't merge.** Report: *"Done. Sent to {{REVIEWER}} as PR #N.
-     They'll merge and deploy on their own schedule."*
+     They'll merge and deploy on their own schedule. Once it's merged, say
+     'Let's get started' before your next change so your branch re-syncs."*
   4. If a PR already exists from a prior session, new pushes auto-update
      it. Don't open a duplicate.
 
