@@ -93,7 +93,9 @@ asks "what do I do now?" / "where do I start?" / "what's next?":
    git fetch origin
    git merge origin/{{MAIN_BRANCH}} --no-edit   # no-op if current; folds in anything merged
    ```
-   Resolve any conflict (and re-verify the preview) before pushing. Then:
+   Resolve trivial conflicts (styling, copy, markup) and re-verify. But if
+   it conflicts in app logic, **don't guess** — leave it unpushed and tell
+   the contributor to ping {{REVIEWER}}. Once clean:
    ```
    git add -A
    git commit -m "ui: <short description>"
